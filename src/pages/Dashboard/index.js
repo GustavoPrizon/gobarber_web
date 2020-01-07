@@ -6,6 +6,7 @@ import {
   setHours,
   setMinutes,
   setSeconds,
+  setMilliseconds,
   isBefore,
   isEqual,
   parseISO,
@@ -30,14 +31,17 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function loadSchedule() {
-      const response = await api.get('/schedule', {
+      const response = await api.get('schedule', {
         params: { date },
       });
 
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const data = range.map(hour => {
-        const checkDate = setSeconds(setMinutes(setHours(date, hour), 0), 0);
+        const checkDate = setMilliseconds(
+          setSeconds(setMinutes(setHours(date, hour), 0), 0),
+          0
+        );
         const compareDate = utcToZonedTime(checkDate, timezone);
 
         return {
@@ -50,6 +54,7 @@ export default function Dashboard() {
       });
 
       setSchedule(data);
+      console.tron.log(data);
     }
 
     loadSchedule();
